@@ -6,9 +6,9 @@ Success Academy is a high-end, professional e-learning solution designed for cor
 
 | Portal | URL | Role |
 | :--- | :--- | :--- |
-| **Main Website** | [https://academy-gamma-six.vercel.app/](https://academy-gamma-six.vercel.app/) | Exploration |
-| **Student Portal** | [https://academy-gamma-six.vercel.app/student/login.html](https://academy-gamma-six.vercel.app/student/login.html) | Learning |
-| **Admin Console** | [https://academy-gamma-six.vercel.app/admin/login.html](https://academy-gamma-six.vercel.app/admin/login.html) | Management |
+| **Main Website** | [https://academy-six-beryl.vercel.app/](https://academy-six-beryl.vercel.app/) | Exploration |
+| **Student Portal** | [https://academy-six-beryl.vercel.app/student/login.html](https://academy-six-beryl.vercel.app/student/login.html) | Learning |
+| **Admin Console** | [https://academy-six-beryl.vercel.app/admin/login.html](https://academy-six-beryl.vercel.app/admin/login.html) | Management |
 
 ---
 
