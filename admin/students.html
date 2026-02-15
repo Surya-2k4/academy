@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students | Success Academy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <h3 class="academy-logo mb-5">SUCCESS ADMIN</h3>
+        <nav class="nav flex-column gap-2">
+            <a href="dashboard.html" class="nav-link"><i class="fas fa-th-large me-2"></i> Overviews</a>
+            <a href="courses.html" class="nav-link"><i class="fas fa-book me-2"></i> Course Catalog</a>
+            <a href="students.html" class="nav-link active"><i class="fas fa-users-cog me-2"></i> Students & Access</a>
+            <hr class="border-secondary opacity-25 my-4">
+            <a href="#" onclick="Auth.logout()" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-2"></i>
+                Logout</a>
+        </nav>
+    </aside>
+
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <main class="main-content">
+        <header class="d-flex justify-content-between align-items-center mb-5 animate-slide-up">
+            <div>
+                <h2 class="fw-bold m-0">Student Management</h2>
+                <p class="text-muted small">Create accounts and manage course access.</p>
+            </div>
+            <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                <i class="fas fa-plus-circle me-2"></i> Register Student
+            </button>
+        </header>
+
+        <section class="glass-card animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student Information</th>
+                            <th>Active Access</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentList">
+                        <!-- Content via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Student Modal -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-card border-0 glass-card">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Create Student Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addStudentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="stdName" required
+                                placeholder="e.g. Alex Johnson">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="stdEmail" required
+                                placeholder="student@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Initial Password</label>
+                            <input type="text" class="form-control" id="stdPass" required value="student123">
+                        </div>
+                        <button type="submit" class="btn btn-premium w-100 mt-2">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Course Modal -->
+    <div class="modal fade" id="assignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-card border-0 glass-card">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Manage Course Access</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-4">Grant access for: <span id="targetStdName"
+                            class="text-white fw-bold"></span></p>
+                    <input type="hidden" id="targetStdEmail">
+                    <div id="courseChecklist" class="d-flex flex-column gap-3">
+                        <!-- Checkboxes via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        const addModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+        const assignModal = new bootstrap.Modal(document.getElementById('assignModal'));
+
+        function loadStudents() {
+            const students = DataManager.getStudents();
+            const enrollments = DataManager.getEnrollments();
+            const list = document.getElementById('studentList');
+            list.innerHTML = '';
+
+            students.forEach(std => {
+                const stdEnrollments = enrollments.filter(e => e.studentEmail === std.email);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="student-oval">
+                                ${std.name.charAt(0)}
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-6" style="color: var(--primary) !important;">${std.name}</div>
+                                <div class="text-muted small">${std.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge-soft-primary" style="font-weight: 800;">${stdEnrollments.length} Courses Assigned</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-outline-custom btn-sm px-3" onclick="openAssignModal('${std.email}', '${std.name}')">
+                            <i class="fas fa-key me-1"></i> Manage Access
+                        </button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        function openAssignModal(email, name) {
+            document.getElementById('targetStdName').textContent = name;
+            document.getElementById('targetStdEmail').value = email;
+            const courses = DataManager.getCourses();
+            const enrollments = DataManager.getEnrollments();
+            const stdEnrolledIds = enrollments.filter(e => e.studentEmail === email).map(e => e.courseId);
+            const checklist = document.getElementById('courseChecklist');
+            checklist.innerHTML = '';
+
+            courses.forEach(c => {
+                const isChecked = stdEnrolledIds.includes(c.id);
+                const div = document.createElement('div');
+                div.className = 'd-flex justify-content-between align-items-center p-3 rounded-3';
+                div.style.background = 'var(--primary)';
+                div.innerHTML = `
+                    <div class="small fw-800" style="color: #000 !important;">${c.title}</div>
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input" type="checkbox" ${isChecked ? 'checked' : ''} 
+                            onchange="toggleEnrollment('${email}', ${c.id}, this.checked)">
+                    </div>
+                `;
+                checklist.appendChild(div);
+            });
+            assignModal.show();
+        }
+
+        function toggleEnrollment(email, cid, enroll) {
+            if (enroll) DataManager.enrollStudent(email, cid);
+            else DataManager.unenrollStudent(email, cid);
+            loadStudents();
+        }
+
+        document.getElementById('addStudentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const res = DataManager.addStudent(document.getElementById('stdName').value, document.getElementById('stdEmail').value, document.getElementById('stdPass').value);
+            if (res.success) { addModal.hide(); loadStudents(); e.target.reset(); }
+            else alert(res.message);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Auth.checkAuth('admin');
+
+            // Mobile Sidebar Toggle
+            const toggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+                document.addEventListener('click', (e) => {
+                    if (window.innerWidth < 992 && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+            }
+
+            loadStudents();
+        });
+    </script>
+</body>
+
+</html>

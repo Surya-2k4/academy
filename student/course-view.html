@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning | Success Academy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: #000;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .custom-controls {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-container:hover .custom-controls {
+            opacity: 1;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-filled {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            width: 0%;
+        }
+
+        .speed-select {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 2px 5px;
+            font-size: 0.8rem;
+        }
+
+        .notes-scroll {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .notes-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .notes-scroll::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-dark">
+
+    <nav class="navbar navbar-dark py-3">
+        <div class="container">
+            <a href="dashboard.html" class="btn btn-outline-custom rounded-pill btn-sm">
+                <i class="fas fa-arrow-left me-2"></i> Exit Course
+            </a>
+            <span class="navbar-brand academy-logo fs-5 mx-auto" id="courseTitle">Loading...</span>
+        </div>
+    </nav>
+
+    <main class="container-fluid py-4 px-lg-5">
+        <div class="row g-4">
+            <!-- Video Column -->
+            <div class="col-lg-8">
+                <div class="video-container" id="videoWrapper">
+                    <div id="player"></div>
+                    <div class="custom-controls">
+                        <div class="progress-bar-container" id="progressContainer">
+                            <div class="progress-filled" id="progressFilled"></div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <button id="playPauseBtn" class="btn text-white p-0 fs-4"><i class="fas fa-play"
+                                    id="playIcon"></i></button>
+                            <span class="text-white small" id="timeDisplay">00:00 / 00:00</span>
+                            <div class="ms-auto d-flex align-items-center gap-3">
+                                <span class="small text-muted">Speed</span>
+                                <select class="speed-select" id="speedSelect">
+                                    <option value="0.5">0.5x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 glass-card animate-slide-up">
+                    <h4 class="fw-bold mb-3">About this course</h4>
+                    <p id="courseDesc" class="text-muted small"></p>
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <div class="badge-soft-primary" id="courseInstructor">Instructor</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Column -->
+            <div class="col-lg-4">
+                <div class="notes-container glass-card h-100 animate-slide-up">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold m-0"><i class="fas fa-edit text-primary me-2"></i> Study Notes</h4>
+                        <button class="btn btn-sm btn-outline-custom border-0 text-primary" onclick="downloadNotesPDF()"
+                            title="Download PDF">
+                            <i class="fas fa-file-pdf fa-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="input-group">
+                            <input type="text" id="noteInput" class="form-control"
+                                placeholder="Add a note at this time...">
+                            <button class="btn btn-premium" onclick="addNote()"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="notes-scroll" id="notesList">
+                        <!-- Notes will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        let player;
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseId = parseInt(urlParams.get('id'));
+        const course = DataManager.getCourses().find(c => c.id === courseId);
+
+        if (!course) window.location.href = 'dashboard.html';
+
+        document.getElementById('courseTitle').textContent = course.title;
+        document.getElementById('courseDesc').textContent = course.description;
+        document.getElementById('courseInstructor').textContent = course.instructor;
+
+        // YT API
+        function onYouTubeIframeAPIReady() {
+            const videoId = course.videoUrl.split('/').pop().split('?')[0];
+            player = new YT.Player('player', {
+                height: '100%', width: '100%', videoId: videoId,
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'fs': 0 },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+            });
+        }
+
+        function onPlayerReady() {
+            // Seek to last saved position
+            const progress = DataManager.getProgress(Auth.getUser().email, courseId);
+            if (progress && progress.time > 0) {
+                player.seekTo(progress.time);
+            }
+
+            setInterval(updateTime, 1000);
+            setInterval(saveCurrentProgress, 5000); // Auto-save progress every 5 seconds
+            loadNotes();
+        }
+
+        function saveCurrentProgress() {
+            if (player && player.getDuration) {
+                const cur = player.getCurrentTime();
+                const dur = player.getDuration();
+                const perc = Math.round((cur / dur) * 100);
+                if (dur > 0) {
+                    DataManager.saveProgress(Auth.getUser().email, courseId, cur, perc);
+                }
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const playIcon = document.getElementById('playIcon');
+            playIcon.className = (event.data === YT.PlayerState.PLAYING) ? 'fas fa-pause' : 'fas fa-play';
+        }
+
+        function updateTime() {
+            if (player && player.getDuration) {
+                const cur = player.getCurrentTime();
+                const dur = player.getDuration();
+                document.getElementById('progressFilled').style.width = `${(cur / dur) * 100}%`;
+                document.getElementById('timeDisplay').textContent = `${formatTime(cur)} / ${formatTime(dur)}`;
+            }
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        // Notes Logic
+        function addNote() {
+            const text = document.getElementById('noteInput').value;
+            if (!text) return;
+            const time = player.getCurrentTime();
+            const notes = getNotes();
+            notes.push({ time, text, date: new Date().toLocaleDateString() });
+            saveNotes(notes);
+            renderNotes();
+            document.getElementById('noteInput').value = '';
+        }
+
+        function getNotes() {
+            const key = `notes_${courseId}_${Auth.getUser().email}`;
+            return JSON.parse(localStorage.getItem(key)) || [];
+        }
+
+        function saveNotes(notes) {
+            const key = `notes_${courseId}_${Auth.getUser().email}`;
+            localStorage.setItem(key, JSON.stringify(notes));
+        }
+
+        function renderNotes() {
+            const list = document.getElementById('notesList');
+            const notes = getNotes().sort((a, b) => a.time - b.time);
+            list.innerHTML = notes.length ? '' : '<p class="text-muted text-center small py-5">No notes yet. Add one during the video!</p>';
+
+            notes.forEach((n, idx) => {
+                const div = document.createElement('div');
+                div.className = 'note-item animate-slide-up';
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="note-timestamp" onclick="seekVideo(${n.time})">${formatTime(n.time)}</span>
+                        <button class="btn btn-sm text-danger p-0 border-0" onclick="deleteNote(${idx})"><i class="fas fa-trash-alt small"></i></button>
+                    </div>
+                    <div class="small text-white">${n.text}</div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function seekVideo(time) { player.seekTo(time); player.playVideo(); }
+
+        function deleteNote(idx) {
+            const notes = getNotes().sort((a, b) => a.time - b.time);
+            notes.splice(idx, 1);
+            saveNotes(notes);
+            renderNotes();
+        }
+
+        function loadNotes() { renderNotes(); }
+
+        // PDF Export
+        function downloadNotesPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const notes = getNotes().sort((a, b) => a.time - b.time);
+
+            doc.setFontSize(22);
+            doc.text("Study Notes: Success Academy", 20, 20);
+            doc.setFontSize(14);
+            doc.text(`Course: ${course.title}`, 20, 30);
+            doc.text(`Student: ${Auth.getUser().name}`, 20, 37);
+            doc.line(20, 42, 190, 42);
+
+            let y = 55;
+            notes.forEach(n => {
+                if (y > 270) { doc.addPage(); y = 20; }
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text(`Timestamp: ${formatTime(n.time)}`, 20, y);
+                doc.setTextColor(0);
+                doc.setFontSize(12);
+                doc.text(doc.splitTextToSize(n.text, 160), 20, y + 7);
+                y += 25;
+            });
+
+            doc.save(`${course.title}_Notes.pdf`);
+        }
+
+        // UI Controls
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+            else player.playVideo();
+        });
+
+        document.getElementById('speedSelect').addEventListener('change', (e) => player.setPlaybackRate(parseFloat(e.target.value)));
+
+        document.getElementById('progressContainer').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            player.seekTo(pos * player.getDuration());
+        });
+
+        document.addEventListener('DOMContentLoaded', () => Auth.checkAuth('student'));
+    </script>
+</body>
+
+</html>

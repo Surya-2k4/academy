@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Access | Dora Academy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="d-flex align-items-center justify-content-center min-vh-100">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="text-center mb-5 animate-slide-up">
+                    <h2 class="academy-logo fs-1 mb-2">SUCCESS ACADEMY</h2>
+                    <p class="text-muted small fw-600 uppercase tracking-widest">Student Portal Access</p>
+                </div>
+
+                <div class="glass-card animate-slide-up" style="animation-delay: 0.1s;">
+                    <form id="loginForm">
+                        <div class="mb-4">
+                            <label class="form-label">Corporate Email</label>
+                            <input type="email" class="form-control" id="email" required placeholder="name@company.com">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Secure Password</label>
+                            <input type="password" class="form-control" id="password" required placeholder="••••••••">
+                        </div>
+                        <div id="errorMessage" class="text-danger small mb-4" style="display:none; text-align: center;">
+                        </div>
+                        <button type="submit" class="btn btn-premium w-100 py-3">Authentication</button>
+                    </form>
+                </div>
+
+                <div class="text-center mt-5 animate-slide-up" style="animation-delay: 0.2s;">
+                    <p class="text-muted small">Access issues? Contact your academy administrator.</p>
+                    <a href="../index.html" class="btn btn-link text-muted text-decoration-none small"><i
+                            class="fas fa-arrow-left me-2"></i> Return Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const result = Auth.login('student', email, password);
+
+            if (result.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                const err = document.getElementById('errorMessage');
+                err.textContent = result.message;
+                err.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

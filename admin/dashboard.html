@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Success Academy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <h3 class="academy-logo mb-5">SUCCESS ADMIN</h3>
+        <nav class="nav flex-column gap-2">
+            <a href="dashboard.html" class="nav-link active"><i class="fas fa-th-large me-2"></i> Overviews</a>
+            <a href="courses.html" class="nav-link"><i class="fas fa-book me-2"></i> Course Catalog</a>
+            <a href="students.html" class="nav-link"><i class="fas fa-users-cog me-2"></i> Students & Access</a>
+            <hr class="border-secondary opacity-25 my-4">
+            <a href="#" onclick="Auth.logout()" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-2"></i>
+                Logout</a>
+        </nav>
+    </aside>
+
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <main class="main-content">
+        <header class="d-flex justify-content-between align-items-center mb-5 animate-slide-up">
+            <div>
+                <h2 id="welcomeMsg" class="fw-bold">Welcome Back, Admin!</h2>
+                <p class="text-muted small">Success Academy performance overview.</p>
+            </div>
+            <div class="glass-card py-2 px-4 border-0">
+                <span id="adminName" class="fw-bold text-primary">Admin</span>
+            </div>
+        </header>
+
+        <section class="row g-4 mb-5 animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <h5 class="text-muted small uppercase mb-3">Total Courses</h5>
+                    <h2 id="totalCourses" class="display-5 fw-bold text-primary">0</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <h5 class="text-muted small uppercase mb-3">Total Students</h5>
+                    <h2 id="totalStudents" class="display-5 fw-bold text-primary">0</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <h5 class="text-muted small uppercase mb-3">Active Enrollments</h5>
+                    <h2 id="totalEnrollments" class="display-5 fw-bold text-primary">0</h2>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card animate-slide-up" style="animation-delay: 0.2s;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold m-0">Recent Course Load</h4>
+                <a href="courses.html" class="btn btn-sm btn-outline-custom">View Repository</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Program Title</th>
+                            <th>Lead Instructor</th>
+                            <th>Platform</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentCoursesTable"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = Auth.checkAuth('admin');
+            document.getElementById('adminName').textContent = user.name;
+
+            // Mobile Sidebar Toggle
+            const toggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+                // Close on click outside for mobile
+                document.addEventListener('click', (e) => {
+                    if (window.innerWidth < 992 && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+            }
+
+            const courses = DataManager.getCourses();
+            const students = DataManager.getStudents();
+            const enrollments = DataManager.getEnrollments();
+            document.getElementById('totalCourses').textContent = courses.length;
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalEnrollments').textContent = enrollments.length;
+            const tableBody = document.getElementById('recentCoursesTable');
+            courses.slice(-5).reverse().forEach(course => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${course.title}</td><td>${course.instructor}</td><td><span class="badge-soft-primary">Academy Video</span></td><td><span class="text-success small fw-bold">Online</span></td>`;
+                tableBody.appendChild(tr);
+            });
+        });
+    </script>
+</body>
+
+</html>
