@@ -7,10 +7,10 @@ const DataManager = {
             ]));
         }
         if (!localStorage.getItem('dora_students')) {
-            localStorage.setItem('dora_students', JSON.stringify([]));
+            localStorage.setItem('dora_students', JSON.stringify([{ email: 'student@success.com', password: 'student', name: 'Demo Student' }]));
         }
         if (!localStorage.getItem('dora_admins')) {
-            localStorage.setItem('dora_admins', JSON.stringify([{ email: 'admin@dora.com', password: 'admin', name: 'Super Admin' }]));
+            localStorage.setItem('dora_admins', JSON.stringify([{ email: 'admin@success.com', password: 'admin', name: 'Super Admin' }]));
         }
         if (!localStorage.getItem('dora_enrollments')) {
             localStorage.setItem('dora_enrollments', JSON.stringify([]));

@@ -12,12 +12,17 @@ Success Academy is a high-end, professional e-learning solution designed for cor
 
 ---
 
-## 🔑 Default Administrator Credentials
+## 🔑 Access Credentials (DEMO)
 
+### 🛡️ Administrator Console
 To access the administrative console for management and setup:
-
-- **Identifier:** `admin@dora.com`
+- **Identifier:** `admin@success.com`
 - **Security Password:** `admin`
+
+### 🎓 Demo Student Portal
+To experience the learning journey as a student:
+- **Identifier:** `student@success.com`
+- **Security Password:** `student`
 
 ---
 
