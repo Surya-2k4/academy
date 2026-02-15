@@ -110,7 +110,7 @@
             const tableBody = document.getElementById('recentCoursesTable');
             courses.slice(-5).reverse().forEach(course => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${course.title}</td><td>${course.instructor}</td><td><span class="badge-soft-primary">Academy Video</span></td><td><span class="text-success small fw-bold">Online</span></td>`;
+                tr.innerHTML = `<td class="text-primary fw-bold">${course.title}</td><td class="text-muted small">${course.instructor}</td><td><span class="badge-soft-primary">Academy Video</span></td><td><span class="text-success small fw-bold">Online</span></td>`;
                 tableBody.appendChild(tr);
             });
         });
