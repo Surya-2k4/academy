@@ -6,46 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning | Success Academy</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* Unified Video + Description Card */
+        .learning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: var(--transition-smooth);
+        }
+
+        .learning-card:hover {
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Video Player */
         .video-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%;
+            aspect-ratio: 16/9;
             background: #000;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
         }
 
         #player {
             position: absolute;
             top: 0;
             left: 0;
-            bottom: 0;
-            right: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
         }
 
+        /* Video Controls — visible on hover (desktop) & tap (mobile) */
         .custom-controls {
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 40px 20px 20px;
+            padding: 40px 16px 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             z-index: 10;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
-        .video-container:hover .custom-controls {
+        .video-container:hover .custom-controls,
+        .video-container.controls-visible .custom-controls {
             opacity: 1;
         }
 
@@ -63,6 +79,7 @@
             background: var(--primary);
             border-radius: 3px;
             width: 0%;
+            transition: width 0.3s linear;
         }
 
         .speed-select {
@@ -74,94 +91,197 @@
             font-size: 0.8rem;
         }
 
+        .speed-select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        /* Notes section scroll */
         .notes-scroll {
-            max-height: 500px;
+            flex: 1 1 auto;
             overflow-y: auto;
-            padding-right: 10px;
+            padding-right: 8px;
+            min-height: 200px;
         }
 
         .notes-scroll::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
 
         .notes-scroll::-webkit-scrollbar-thumb {
             background: var(--border-light);
             border-radius: 10px;
         }
+
+        /* Note items */
+        .note-item {
+            background: rgba(108, 76, 214, 0.04);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            transition: var(--transition-smooth);
+        }
+
+        .note-item:hover {
+            border-color: var(--primary);
+            background: rgba(108, 76, 214, 0.08);
+        }
+
+        .note-timestamp {
+            background: var(--primary);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .note-timestamp:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        /* Notes panel — fixed height on desktop for side-by-side alignment */
+        .notes-panel {
+            height: auto;
+        }
+
+        /* ===== DESKTOP (lg+): 50/50 side-by-side ===== */
+        @media (min-width: 992px) {
+            .notes-panel {
+                height: calc(100vh - 140px);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .notes-scroll {
+                flex: 1 1 0;
+                min-height: 0;
+            }
+        }
+
+        /* ===== MOBILE (below lg): stacked layout ===== */
+        @media (max-width: 991.98px) {
+            .notes-scroll {
+                max-height: 50vh;
+            }
+
+            .custom-controls {
+                padding: 20px 12px 12px;
+            }
+        }
+
+        /* ===== SMALL MOBILE ===== */
+        @media (max-width: 575.98px) {
+            .learning-card .p-4 {
+                padding: 1rem !important;
+            }
+
+            .glass-card {
+                padding: 1rem !important;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-dark">
+<body>
+    <div class="mesh-bg"></div>
 
-    <nav class="navbar navbar-dark py-3">
-        <div class="container">
-            <a href="dashboard.html" class="btn btn-outline-custom rounded-pill btn-sm">
-                <i class="fas fa-arrow-left me-2"></i> Exit Course
+    <!-- Navbar: Title centered, Exit button on the right -->
+    <nav class="navbar py-2 py-lg-3 sticky-top">
+        <div class="container-fluid px-3 px-lg-5 d-flex align-items-center justify-content-center position-relative">
+            <span class="academy-logo fs-6 fs-lg-5 text-truncate" id="courseTitle"
+                style="max-width: 60%;">Loading...</span>
+            <a href="dashboard.html"
+                class="btn btn-outline-custom rounded-pill btn-sm position-absolute end-0 me-3 me-lg-5">
+                <span class="d-none d-sm-inline">Exit Course</span>
+                <i class="fas fa-sign-out-alt ms-0 ms-sm-2"></i>
             </a>
-            <span class="navbar-brand academy-logo fs-5 mx-auto" id="courseTitle">Loading...</span>
         </div>
     </nav>
 
-    <main class="container-fluid py-4 px-lg-5">
-        <div class="row g-4">
-            <!-- Video Column -->
-            <div class="col-lg-8">
-                <div class="video-container" id="videoWrapper">
-                    <div id="player"></div>
-                    <div class="custom-controls">
-                        <div class="progress-bar-container" id="progressContainer">
-                            <div class="progress-filled" id="progressFilled"></div>
-                        </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <button id="playPauseBtn" class="btn text-white p-0 fs-4"><i class="fas fa-play"
-                                    id="playIcon"></i></button>
-                            <span class="text-white small" id="timeDisplay">00:00 / 00:00</span>
-                            <div class="ms-auto d-flex align-items-center gap-3">
-                                <span class="small text-muted">Speed</span>
-                                <select class="speed-select" id="speedSelect">
-                                    <option value="0.5">0.5x</option>
-                                    <option value="1" selected>1x</option>
-                                    <option value="1.5">1.5x</option>
-                                    <option value="2">2x</option>
-                                </select>
+    <main class="container-fluid px-3 px-lg-5 py-3 py-lg-4">
+        <div class="row g-3 g-lg-4">
+
+            <!-- LEFT: Unified Video + Course Info -->
+            <div class="col-lg-6 col-12">
+                <div class="learning-card animate-slide-up">
+                    <!-- Video Player -->
+                    <div class="video-container" id="videoWrapper">
+                        <div id="player"></div>
+                        <div class="custom-controls">
+                            <div class="progress-bar-container" id="progressContainer">
+                                <div class="progress-filled" id="progressFilled"></div>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 gap-lg-3">
+                                <button id="playPauseBtn" class="btn text-white p-0 fs-5 fs-lg-4">
+                                    <i class="fas fa-play" id="playIcon"></i>
+                                </button>
+                                <span class="text-white small" id="timeDisplay" style="font-size: 0.75rem;">00:00 /
+                                    00:00</span>
+                                <div class="ms-auto d-flex align-items-center gap-2">
+                                    <span class="small text-white-50 d-none d-sm-inline"
+                                        style="font-size: 0.7rem;">Speed</span>
+                                    <select class="speed-select" id="speedSelect">
+                                        <option value="0.5">0.5x</option>
+                                        <option value="1" selected>1x</option>
+                                        <option value="1.5">1.5x</option>
+                                        <option value="2">2x</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="mt-4 glass-card animate-slide-up">
-                    <h4 class="fw-bold mb-3">About this course</h4>
-                    <p id="courseDesc" class="text-muted small"></p>
-                    <div class="d-flex align-items-center gap-2 mt-3">
-                        <div class="badge-soft-primary" id="courseInstructor">Instructor</div>
+                    <!-- Course Description (merged into the same card) -->
+                    <div class="p-4">
+                        <h5 class="fw-bold mb-2">
+                            <i class="fas fa-info-circle text-primary me-2"></i> About this Course
+                        </h5>
+                        <p id="courseDesc" class="text-muted small mb-3"></p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <span class="badge-soft-primary" id="courseInstructor">Instructor</span>
+                            <span class="text-muted" style="font-size: 0.7rem;">Success Academy Curriculum</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Notes Column -->
-            <div class="col-lg-4">
-                <div class="notes-container glass-card h-100 animate-slide-up">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-bold m-0"><i class="fas fa-edit text-primary me-2"></i> Study Notes</h4>
+            <!-- RIGHT: Study Notes -->
+            <div class="col-lg-6 col-12">
+                <div class="notes-panel glass-card d-flex flex-column animate-slide-up">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold m-0">
+                            <i class="fas fa-edit text-primary me-2"></i> Study Notes
+                        </h5>
                         <button class="btn btn-sm btn-outline-custom border-0 text-primary" onclick="downloadNotesPDF()"
                             title="Download PDF">
                             <i class="fas fa-file-pdf fa-lg"></i>
                         </button>
                     </div>
 
-                    <div class="mb-4">
+                    <!-- Note Input -->
+                    <div class="mb-3">
                         <div class="input-group">
                             <input type="text" id="noteInput" class="form-control"
-                                placeholder="Add a note at this time...">
-                            <button class="btn btn-premium" onclick="addNote()"><i class="fas fa-plus"></i></button>
+                                placeholder="Add a timestamped note...">
+                            <button class="btn btn-premium px-3" onclick="addNote()">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Notes List -->
                     <div class="notes-scroll" id="notesList">
                         <!-- Notes will appear here -->
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
 
@@ -182,6 +302,13 @@
         document.getElementById('courseDesc').textContent = course.description;
         document.getElementById('courseInstructor').textContent = course.instructor;
 
+        // Toggle video controls on tap (for touch devices)
+        document.getElementById('videoWrapper').addEventListener('click', function (e) {
+            // Don't toggle if clicking a control element
+            if (e.target.closest('.custom-controls')) return;
+            this.classList.toggle('controls-visible');
+        });
+
         // YT API
         function onYouTubeIframeAPIReady() {
             const videoId = course.videoUrl.split('/').pop().split('?')[0];
@@ -193,14 +320,12 @@
         }
 
         function onPlayerReady() {
-            // Seek to last saved position
             const progress = DataManager.getProgress(Auth.getUser().email, courseId);
             if (progress && progress.time > 0) {
                 player.seekTo(progress.time);
             }
-
             setInterval(updateTime, 1000);
-            setInterval(saveCurrentProgress, 5000); // Auto-save progress every 5 seconds
+            setInterval(saveCurrentProgress, 5000);
             loadNotes();
         }
 
@@ -260,17 +385,18 @@
         function renderNotes() {
             const list = document.getElementById('notesList');
             const notes = getNotes().sort((a, b) => a.time - b.time);
-            list.innerHTML = notes.length ? '' : '<p class="text-muted text-center small py-5">No notes yet. Add one during the video!</p>';
+            list.innerHTML = notes.length ? '' :
+                '<div class="text-center py-5"><i class="fas fa-sticky-note text-muted mb-3" style="font-size: 2rem; opacity: 0.3;"></i><p class="text-muted small">No notes yet. Add one while watching!</p></div>';
 
             notes.forEach((n, idx) => {
                 const div = document.createElement('div');
-                div.className = 'note-item animate-slide-up';
+                div.className = 'note-item';
                 div.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="note-timestamp" onclick="seekVideo(${n.time})">${formatTime(n.time)}</span>
                         <button class="btn btn-sm text-danger p-0 border-0" onclick="deleteNote(${idx})"><i class="fas fa-trash-alt small"></i></button>
                     </div>
-                    <div class="small text-white">${n.text}</div>
+                    <div class="small">${n.text}</div>
                 `;
                 list.appendChild(div);
             });
