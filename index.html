@@ -4,83 +4,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success Academy | Advanced Professional Learning</title>
+    <title>Success Academy | Better Future For Your Kids</title>
+    <meta name="description"
+        content="Success Academy offers real-life experiments, workshops and field experience for children. Creative thinking, career planning and public speaking programs.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        .hero {
-            padding: 160px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .delay-1 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-3 {
-            animation-delay: 0.3s;
-        }
-
-        .delay-4 {
-            animation-delay: 0.4s;
-        }
-    </style>
+    <link rel="stylesheet" href="css/home-theme.css">
 </head>
 
-<body>
+<body class="home-page">
 
-    <div class="mesh-bg"></div>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="home-nav">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="#" class="brand-text">Success<span class="brand-dot">.</span></a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container border-0">
-            <a class="navbar-brand academy-logo fs-3" href="#">SUCCESS ACADEMY</a>
-            <div class="ms-auto">
-                <a href="student/login.html" class="btn btn-premium px-4">Student Access</a>
+            <ul class="nav-links d-none d-lg-flex">
+                <li><a href="#hero">About Us</a></li>
+                <li><a href="#programs">Programs</a></li>
+                <li><a href="#features">Resources</a></li>
+
+            </ul>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="student/login.html" class="btn-get-started d-none d-md-inline-flex"
+                    style="padding: 10px 22px; font-size: 0.85rem;">
+                    Student Login <span class="play-icon"><i class="fas fa-arrow-right"></i></span>
+                </a>
+                <a href="student/login.html" class="nav-yt-btn d-md-none">
+                    <i class="fas fa-user"></i>
+                </a>
             </div>
         </div>
     </nav>
 
     <main>
-        <section class="hero">
+        <!-- ===== HERO SECTION ===== -->
+        <section class="hero-section" id="hero">
             <div class="container">
-                <div class="row align-items-center g-5">
-                    <div class="col-lg-7">
-                        <div class="animate-reveal-right">
-                            <span class="badge-soft-primary mb-4 p-2 px-3">Next-Generation Learning</span>
-                            <h1 class="display-3 fw-bold mb-4">Master Your Craft at <br><span
-                                    class="text-primary">Success Academy.</span></h1>
-                            <p class="lead text-muted mb-5">Experience the pinnacle of professional education. Our
-                                platform combines expert-led curriculum with high-tech interactive tools to accelerate
-                                your career growth.</p>
+                <div class="row align-items-center">
+                    <!-- Left Content -->
+                    <div class="col-lg-6 hero-content mb-5 mb-lg-0">
+                        <h1 class="main-title">Better Future For Your Kids<span class="highlight-dot">.</span></h1>
 
-                            <div class="d-flex flex-column flex-md-row gap-3">
-                                <a href="student/login.html" class="btn btn-premium btn-lg px-5 py-3">
-                                    <i class="fas fa-rocket me-2"></i> Launch Learning Portal
-                                </a>
-                                <a href="#curriculum" class="btn btn-outline-custom btn-lg px-5 py-3">
-                                    Browse Programs
-                                </a>
-                            </div>
+                        <p class="hero-subtitle">
+                            Let the child be the director, and the actor in his own play
+                        </p>
+
+                        <p class="hero-subtitle mt-3" style="opacity: 0.7; font-size: 0.88rem;">
+                            We just don't give our students only lectures but real life experiments, workshops and field
+                            experience throughout the journey!
+                        </p>
+
+                        <div class="d-flex align-items-center gap-3 mt-4 flex-wrap">
+                            <a href="student/login.html" class="btn-get-started">
+                                Get Started <span class="play-icon"><i class="fas fa-play"
+                                        style="margin-left: 1px;"></i></span>
+                            </a>
+
                         </div>
+
+                        <p class="hero-quote">
+                            "Let the child be the director, and the actor in his own play"
+                        </p>
                     </div>
-                    <div class="col-lg-5 d-none d-lg-flex justify-content-center">
-                        <div class="hero-visual-wrapper animate-float">
-                            <div class="morph-shape"></div>
-                            <div class="morph-shape"
-                                style="animation-duration: 20s; animation-direction: reverse; opacity: 0.5;"></div>
-                            <div class="orbiting-dot"></div>
-                            <div class="orbiting-dot" style="animation-duration: 12s; animation-delay: -4s;"></div>
-                            <div class="glass-card d-flex align-items-center justify-content-center p-0"
-                                style="width: 140px; height: 140px; border-radius: 50%; z-index: 5;">
-                                <i class="fas fa-graduation-cap fa-4x text-primary"></i>
+
+                    <!-- Right: Kid visuals + Stats -->
+                    <div class="col-lg-6">
+                        <div class="visual-container">
+                            <!-- Kid Left (with orange circle) -->
+                            <div class="kid-circle kid-left">
+                                <img src="https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=400&h=400&fit=crop&crop=face"
+                                    alt="Happy student with books">
+                            </div>
+                            <div class="circle-bg circle-bg-orange"></div>
+
+                            <!-- Kid Right (with yellow circle) -->
+                            <div class="kid-circle kid-right">
+                                <img src="https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=400&fit=crop&crop=face"
+                                    alt="Confident student">
+                            </div>
+                            <div class="circle-bg circle-bg-yellow"></div>
+
+                            <!-- Floating Stats -->
+                            <div class="stat-item stat-1">
+                                <div class="stat-icon icon-blue">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-number">7.5k+</div>
+                                    <div class="stat-label">Total active students taking gifted courses</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-item stat-2">
+                                <div class="stat-icon icon-green">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-number">50+</div>
+                                    <div class="stat-label">Available field programs and increasing</div>
+                                </div>
+                            </div>
+
+                            <!-- Decorative doodles -->
+                            <div class="doodle"
+                                style="top: -10px; left: 5%; animation: floatStat 7s ease-in-out infinite;">
+                                <i class="fas fa-paper-plane fa-2x"
+                                    style="opacity: 0.15; color: var(--text-dark); transform: rotate(-15deg);"></i>
+                            </div>
+                            <div class="doodle"
+                                style="top: 30%; right: 0; animation: floatStat 8s ease-in-out infinite; animation-delay: 2s;">
+                                <i class="fas fa-star fa-lg" style="opacity: 0.1; color: var(--accent-color);"></i>
+                            </div>
+                            <div class="doodle"
+                                style="bottom: 20%; left: 45%; animation: floatStat 6s ease-in-out infinite; animation-delay: 1s;">
+                                <i class="fas fa-pencil-alt fa-lg"
+                                    style="opacity: 0.12; color: var(--primary-color);"></i>
                             </div>
                         </div>
                     </div>
@@ -88,62 +131,98 @@
             </div>
         </section>
 
-        <section class="py-5" id="curriculum">
+        <!-- ===== PROGRAMS SECTION (Dark) ===== -->
+        <section class="programs-section" id="programs">
             <div class="container">
-                <div class="text-center mb-5 animate-slide-up">
-                    <h2 class="display-5 fw-bold mb-3">The Academy Ecosystem</h2>
-                    <p class="text-muted mx-auto" style="max-width: 600px;">Explore the features that make Success
-                        Academy the preferred choice for elite professional training.</p>
+                <div class="d-flex flex-wrap align-items-start justify-content-between gap-4">
+                    <!-- Left Intro -->
+                    <div class="programs-header" style="min-width: 240px; flex: 0 0 auto;">
+                        <h2>Programs</h2>
+                        <p>Our programs are designed to develop your children.</p>
+                    </div>
+
+                    <!-- Program Cards -->
+                    <div class="d-flex flex-wrap justify-content-center gap-3" style="flex: 1;">
+                        <div class="program-card">
+                            <div class="program-icon">🎨</div>
+                            <div class="program-title">Creative Thinking</div>
+                            <a href="#" class="program-link">Learn more +</a>
+                        </div>
+                        <div class="program-card active">
+                            <div class="program-icon">📋</div>
+                            <div class="program-title">Career Planning</div>
+                            <a href="#" class="program-link">Learn more +</a>
+                        </div>
+                        <div class="program-card">
+                            <div class="program-icon">🎤</div>
+                            <div class="program-title">Public Speaking</div>
+                            <a href="#" class="program-link">Learn more +</a>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ===== FEATURES / RESOURCES ===== -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <h2 class="section-title">Our Resources</h2>
+                <p class="section-subtitle">We develop their confidence to make them sharper</p>
+
                 <div class="row g-4">
-                    <div class="col-md-4 animate-slide-up delay-1">
-                        <div class="glass-card h-100">
-                            <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="f-icon" style="background: rgba(108,76,214,0.08); color: var(--primary-color);">
+                                <i class="fas fa-microchip"></i>
+                            </div>
                             <h4>Managed Infrastructure</h4>
-                            <p class="text-muted small">Centralized administrative control over user access and course
-                                distribution. Performance tracking and secure enrollment management.</p>
+                            <p>Centralized administrative control over user access and course distribution with
+                                performance tracking.</p>
                         </div>
                     </div>
-                    <div class="col-md-4 animate-slide-up delay-2">
-                        <div class="glass-card h-100">
-                            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="f-icon"
+                                style="background: rgba(255,114,94,0.08); color: var(--secondary-color);">
+                                <i class="fas fa-bolt"></i>
+                            </div>
                             <h4>High-Velocity Learning</h4>
-                            <p class="text-muted small">Ultra-responsive video engine with playback speed control,
-                                timeline scrubbing, and instant timestamped navigation.</p>
+                            <p>Ultra-responsive video engine with playback speed control, timeline scrubbing, and
+                                instant navigation.</p>
                         </div>
                     </div>
-                    <div class="col-md-4 animate-slide-up delay-3">
-                        <div class="glass-card h-100">
-                            <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="f-icon" style="background: rgba(255,201,32,0.1); color: var(--accent-color);">
+                                <i class="fas fa-brain"></i>
+                            </div>
                             <h4>Integrated Study Logic</h4>
-                            <p class="text-muted small">Timeline-synchronized note-taking environment. Capture insights
-                                as you watch and export your research to professional PDF reports.</p>
+                            <p>Timeline-synchronized note-taking environment. Capture insights and export to
+                                professional PDF reports.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Dynamic Visual Section -->
-        <section class="py-5 mb-5 overflow-hidden">
-            <div class="container animate-slide-up delay-4">
-                <div class="glass-card p-5 text-center position-relative">
-                    <div class="orbiting-dot" style="top: 20%; left: 10%; animation-duration: 20s;"></div>
-                    <div class="orbiting-dot"
-                        style="bottom: 20%; right: 10%; animation-duration: 15s; animation-delay: -5s;"></div>
-                    <h2 class="display-6 fw-bold mb-4">Elevate Your Corporate Identity</h2>
-                    <p class="text-muted mb-5 mx-auto" style="max-width: 700px;">Success Academy isn't just a platform;
-                        it's a statement. Transform your professional trajectory with our curated excellence programs.
-                    </p>
-                    <a href="student/login.html" class="btn btn-premium btn-lg px-5 animate-glow">Secure Your Access</a>
+        <!-- ===== CTA SECTION ===== -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-card">
+                    <h2>Elevate Your Child's Future</h2>
+                    <p>Success Academy isn't just a platform; it's a launchpad. Transform your child's learning
+                        trajectory with our curated excellence programs.</p>
+                    <a href="student/login.html" class="btn-cta">
+                        <i class="fas fa-rocket"></i> Get Started Today
+                    </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="py-5 border-top border-secondary border-opacity-10 text-center">
-        <p class="text-muted small">&copy; 2026 Success Academy Corporate. <span class="text-primary">Managed by Admin
-                Console.</span></p>
+    <!-- ===== FOOTER ===== -->
+    <footer class="home-footer">
+        <p>&copy; 2026 Success Academy. <span class="highlight">Managed by Admin Console.</span></p>
     </footer>
 
     <script src="js/data.js"></script>
