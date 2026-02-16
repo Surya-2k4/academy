@@ -77,10 +77,15 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-label">YouTube Video Reference (Embed URL)</label>
-                                <input type="url" class="form-control" id="videoUrl" required
-                                    placeholder="https://www.youtube.com/embed/XXXXX">
-                                <div class="form-text text-muted" style="font-size: 0.7rem;">Reference format:
-                                    https://www.youtube.com/embed/[VIDEO_ID]</div>
+                                <div class="input-group">
+                                    <input type="url" class="form-control" id="videoUrl" required
+                                        placeholder="https://www.youtube.com/embed/XXXXX">
+                                    <button class="btn btn-outline-custom" type="button" onclick="quickConvert()">
+                                        Auto-Format
+                                    </button>
+                                </div>
+                                <div class="form-text text-muted" style="font-size: 0.7rem;">Paste any YouTube link and
+                                    click Auto-Format. Final format should be: https://www.youtube.com/embed/[ID]</div>
                             </div>
                         </div>
                         <div class="mt-4 text-end">
@@ -184,6 +189,32 @@
 
             loadCourses();
         });
+
+        function quickConvert() {
+            const input = document.getElementById('videoUrl').value.trim();
+            if (!input) return;
+
+            let videoId = '';
+            const patterns = [
+                /(?:v=|\/)([0-9A-Za-z_-]{11}).*/,
+                /(?:embed\/)([0-9A-Za-z_-]{11}).*/,
+                /(?:youtu\.be\/)([0-9A-Za-z_-]{11}).*/
+            ];
+
+            for (const pattern of patterns) {
+                const match = input.match(pattern);
+                if (match && match[1]) {
+                    videoId = match[1];
+                    break;
+                }
+            }
+
+            if (videoId) {
+                document.getElementById('videoUrl').value = `https://www.youtube.com/embed/${videoId}`;
+            } else {
+                alert('Could not extract Video ID. Please check the URL.');
+            }
+        }
     </script>
 </body>
 

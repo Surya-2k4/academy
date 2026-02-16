@@ -63,6 +63,44 @@
             </div>
         </section>
 
+        <!-- YouTube Converter Tool -->
+        <section class="glass-card mb-5 animate-slide-up" style="animation-delay: 0.15s;">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h4 class="fw-bold mb-3"><i class="fab fa-youtube text-danger me-2"></i> YouTube Embed Converter
+                    </h4>
+                    <p class="text-muted small mb-4">Quickly convert any YouTube video link into the required embed
+                        format for course catalog integration.</p>
+                    <div class="input-group mb-3">
+                        <input type="text" id="ytUrlInput" class="form-control"
+                            placeholder="Paste YouTube URL (e.g., https://youtu.be/...)">
+                        <button class="btn btn-premium" type="button" onclick="convertYTLink()">Convert</button>
+                    </div>
+                    <div id="ytResultWrap" class="d-none animate-slide-up">
+                        <div class="input-group">
+                            <input type="text" id="ytEmbedResult" class="form-control bg-light" readonly>
+                            <button class="btn btn-outline-custom py-2" type="button" onclick="copyYTLink(event)">
+                                <i class="fas fa-copy me-2"></i> Copy
+                            </button>
+                        </div>
+                        <div id="copySuccess" class="text-success small mt-2 d-none">
+                            <i class="fas fa-check-circle me-1"></i> Copied to clipboard!
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center border-start border-light ps-lg-5">
+                    <div id="ytPreviewContainer"
+                        class="p-2 bg-light rounded-4 border border-dashed d-flex align-items-center justify-content-center"
+                        style="min-height: 180px; border-color: var(--primary) !important; opacity: 0.8;">
+                        <div id="ytPreview" class="text-muted small">
+                            <i class="fab fa-youtube display-4 mb-2 opacity-25" style="color: var(--primary);"></i><br>
+                            Video preview will appear here
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="glass-card animate-slide-up" style="animation-delay: 0.2s;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold m-0">Recent Course Load</h4>
@@ -117,6 +155,68 @@
                 tableBody.appendChild(tr);
             });
         });
+
+        function convertYTLink() {
+            const input = document.getElementById('ytUrlInput').value.trim();
+            if (!input) return;
+
+            let videoId = '';
+            // Handle various YouTube link formats
+            const patterns = [
+                /(?:v=|\/)([0-9A-Za-z_-]{11}).*/,
+                /(?:embed\/)([0-9A-Za-z_-]{11}).*/,
+                /(?:youtu\.be\/)([0-9A-Za-z_-]{11}).*/
+            ];
+
+            for (const pattern of patterns) {
+                const match = input.match(pattern);
+                if (match && match[1]) {
+                    videoId = match[1];
+                    break;
+                }
+            }
+
+            if (!videoId) {
+                alert('Please enter a valid YouTube URL');
+                return;
+            }
+
+            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            document.getElementById('ytEmbedResult').value = embedUrl;
+            document.getElementById('ytResultWrap').classList.remove('d-none');
+
+            // Update preview
+            const preview = document.getElementById('ytPreview');
+            preview.innerHTML = `<iframe width="100%" height="160" src="${embedUrl}" frameborder="0" allowfullscreen class="rounded-3 shadow-sm"></iframe>`;
+
+            // Highlight result
+            const resultInput = document.getElementById('ytEmbedResult');
+            resultInput.classList.add('border-primary');
+            setTimeout(() => resultInput.classList.remove('border-primary'), 1000);
+        }
+
+        function copyYTLink(event) {
+            const copyText = document.getElementById('ytEmbedResult');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i> Copied!';
+            btn.classList.replace('btn-outline-custom', 'btn-success');
+            btn.classList.add('text-white');
+
+            const successMsg = document.getElementById('copySuccess');
+            successMsg.classList.remove('d-none');
+
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.classList.replace('btn-success', 'btn-outline-custom');
+                btn.classList.remove('text-white');
+                successMsg.classList.add('d-none');
+            }, 2000);
+        }
     </script>
 </body>
 
